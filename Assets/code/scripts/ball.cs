@@ -14,13 +14,17 @@ public class Ball : MonoBehaviour
 
     private bool isDragging;
     private bool inHole;
+    private bool gameOverTriggered = false;
 
     private void Update()
     {
         PlayerInput();
-
-        if (LevelManager.main.outOfStrokes && rb.linearVelocity.magnitude <= 0.2f && !LevelManager.main.levelCompleted)
+        if (LevelManager.main.outOfStrokes
+            && rb.linearVelocity.magnitude <= 0.2f
+            && !LevelManager.main.levelCompleted
+            && !gameOverTriggered)
         {
+            gameOverTriggered = true;
             LevelManager.main.GameOver();
         }
     }
@@ -33,10 +37,8 @@ public class Ball : MonoBehaviour
     private void PlayerInput()
     {
         if (!IsReady()) return;
-
         Vector2 inputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         float distance = Vector2.Distance(transform.position, inputPos);
-
         if (Input.GetMouseButtonDown(0) && distance <= 0.5f) DragStart();
         if (Input.GetMouseButton(0) && isDragging) DragChange(inputPos);
         if (Input.GetMouseButtonUp(0) && isDragging) DragRelease(inputPos);
@@ -51,7 +53,6 @@ public class Ball : MonoBehaviour
     private void DragChange(Vector2 pos)
     {
         Vector2 dir = (Vector2)transform.position - pos;
-
         lr.SetPosition(0, transform.position);
         lr.SetPosition(1, (Vector2)transform.position + Vector2.ClampMagnitude((dir * power) / 2, maxPower / 2));
     }
@@ -61,11 +62,8 @@ public class Ball : MonoBehaviour
         float distance = Vector2.Distance((Vector2)transform.position, pos);
         isDragging = false;
         lr.positionCount = 0;
-
         if (distance < 1f) return;
-
         LevelManager.main.IncreaseStroke();
-
         Vector2 dir = (Vector2)transform.position - pos;
         rb.linearVelocity = Vector2.ClampMagnitude(dir * power, maxPower);
     }
@@ -73,16 +71,13 @@ public class Ball : MonoBehaviour
     private void CheckWinState()
     {
         if (inHole) return;
-
         if (rb.linearVelocity.magnitude <= maxGoalSpeed)
         {
             rb.linearVelocity = Vector2.zero;
             gameObject.SetActive(false);
             inHole = true;
-
             GameObject p = Instantiate(goalp, transform.position, Quaternion.identity);
             Destroy(p, 2f);
-
             LevelManager.main.LevelComplete();
         }
     }

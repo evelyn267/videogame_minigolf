@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class LevelManager : MonoBehaviour
@@ -14,7 +14,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject gameOverUI;
 
     [Header("Attributes")]
-    [SerializeField] private int maxStrokes;
+    [SerializeField] private int maxStrokes = 3;
 
     private int strokes;
     [HideInInspector] public bool outOfStrokes;
@@ -23,18 +23,21 @@ public class LevelManager : MonoBehaviour
     private void Awake()
     {
         main = this;
-    } 
+    }
 
     private void Start()
     {
+        strokes = 0;
         UpdateStrokeUI();
+        levelCompleteUI.SetActive(false);
+        gameOverUI.SetActive(false);
     }
 
     public void IncreaseStroke()
     {
+        if (outOfStrokes || levelCompleted) return;
         strokes++;
         UpdateStrokeUI();
-
         if (strokes >= maxStrokes)
         {
             outOfStrokes = true;
@@ -43,22 +46,30 @@ public class LevelManager : MonoBehaviour
 
     public void LevelComplete()
     {
+        if (levelCompleted) return;
         levelCompleted = true;
-
         levelCompletedStrokeUI.text = strokes > 1
             ? "You holed it in " + strokes + " strokes"
             : "You got a hole in one!";
-
         levelCompleteUI.SetActive(true);
     }
 
     public void GameOver()
     {
+        if (gameOverUI.activeSelf) return;
         gameOverUI.SetActive(true);
     }
 
     private void UpdateStrokeUI()
     {
         strokeUI.text = strokes + "/" + maxStrokes;
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            GameOver();
+        }
     }
 }
