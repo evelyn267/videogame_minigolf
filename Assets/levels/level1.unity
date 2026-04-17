@@ -1585,6 +1585,7 @@ MonoBehaviour:
   levelCompleteUI: {fileID: 1282318709}
   levelCompletedStrokeUI: {fileID: 1700673741}
   gameOverUI: {fileID: 1639766482}
+  tutorialPanel: {fileID: 2067589396}
   maxStrokes: 3
   outOfStrokes: 0
   levelCompleted: 0
@@ -2506,7 +2507,11 @@ MonoBehaviour:
 
 
     -
-    Release to launch it toward the goal.'
+    Release to launch it toward the goal.
+
+
+    -You have 3 attempts to reach the
+    goal.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3018,13 +3023,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 570919440}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 570919441}
+        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
+        m_MethodName: CloseTutorial
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
