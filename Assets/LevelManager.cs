@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI levelCompletedStrokeUI;
     [Space(10)]
     [SerializeField] private GameObject gameOverUI;
+    [SerializeField] private GameObject tutorialPanel;
 
     [Header("Attributes")]
     [SerializeField] private int maxStrokes = 3;
@@ -31,6 +33,8 @@ public class LevelManager : MonoBehaviour
         UpdateStrokeUI();
         levelCompleteUI.SetActive(false);
         gameOverUI.SetActive(false);
+        if (tutorialPanel != null)
+            tutorialPanel.SetActive(true);
     }
 
     public void IncreaseStroke()
@@ -65,11 +69,38 @@ public class LevelManager : MonoBehaviour
         strokeUI.text = strokes + "/" + maxStrokes;
     }
 
+    public void GoToMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void LoadNextLevel()
+    {
+        int next = SceneManager.GetActiveScene().buildIndex + 1;
+        if (next < SceneManager.sceneCountInBuildSettings)
+            SceneManager.LoadScene(next);
+        else
+            SceneManager.LoadScene("MainMenu");
+    }
+
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void CloseTutorial()
+    {
+        tutorialPanel.SetActive(false);
+    }
+
     void Update()
     {
+        #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.G))
         {
             GameOver();
         }
+        #endif
     }
 }
